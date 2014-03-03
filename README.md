@@ -17,4 +17,5 @@ Usage
 This bot doesn't actually connect to an IRC server -- it's intended to be used
 with [ii](http://tools.suckless.org/ii). Once you have ii running, and have
 `/join`ed the channel you want to run the bot in, do something like:
+
     tail -Fn1 irc/irc.example.org/#channel/out | sedbot.awk outfile=irc/irc.example.org/#channel/in
