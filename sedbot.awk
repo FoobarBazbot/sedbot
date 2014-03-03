@@ -14,6 +14,10 @@ $0 ~ line_re {
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
   regex=0;
 }
+line ~ /^s\/(([^\/]|\\\/)+)\/(([^/]|\\\/)*)$/ {
+  regex=1;
+  lineout("","\001ACTION hands " user " a /\001",1);
+}
 line ~ /^s/ {
   sep=substr(line,2,1);
   if(sep ~ /[\.\^\$\[\]\|\+\*\(\)\{\}]/) sep="\\"sep;
@@ -32,5 +36,5 @@ line ~ /^s/ {
     lineout(last_line[user],gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
   }
 }
-line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 36-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
+line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 40-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
 !regex {last_line[user]=line;}
