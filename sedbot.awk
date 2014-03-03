@@ -12,10 +12,10 @@ BEGIN {
 $0 ~ line_re {
   user=gensub(line_re,"\\1",1);
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
-  regex=0;
+  update_line=1;
 }
 line ~ /^s\/(([^\/]|\\\/)+)\/(([^/]|\\\/)*)$/ {
-  regex=1;
+  update_line=0;
   lineout("","\001ACTION hands " user " a /\001",1);
 }
 line ~ /^s/ {
@@ -24,7 +24,7 @@ line ~ /^s/ {
   desep="\\\\("sep")";
   s_re = "^s" sep "(([^" sep "]|\\\\" sep ")+)" sep "(([^" sep "]|\\\\" sep ")*)" sep "(([0-9]+|g)|([iI]))*$";
   if(line ~ s_re) {
-    regex=1;
+    update_line=0;
     search=gensub(desep,"\\1","g",gensub(s_re,"\\1", 1, line));
     repl  =gensub(desep,"\\1","g",gensub(s_re,"\\3", 1, line));
     count =gensub(desep,"\\1","g",gensub(s_re,"\\6", 1, line));
@@ -37,4 +37,4 @@ line ~ /^s/ {
   }
 }
 line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 40-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
-!regex {last_line[user]=line;}
+update_line {last_line[user]=line;}
