@@ -3,12 +3,12 @@ function lineout(old,new,nouser) {
   if(old!=new) print (nouser?"":"<" user "> ") new >outfile; close(outfile);
 }
 BEGIN {
- outfile=( ENVIRON["HOME"] "/sedbotirc/irc.sylnt.us/#soylent/in");
- line_re="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} <([^>]*)> (.*)$";
- blag_re="world wide web|internet|interweb|intersphere|intertubes|interblag|blogosphere|blagonet|blagosphere|blagoblag|webnet|webweb";
- blag_n=split(blag_re,blag_word,/\|/);
- slash_n=split("\1ACTION offers # a /\1|\1ACTION tosses a / to #\1|#, did you know there's three slashes in a proper s/// command?|\1ACTION hurls a / at #!\1|#, you bloody moron, get the syntax straight or get off this channel!!\n\1ACTION peppers # with /s\1",slash_msg,"|");
- srand();
+  outfile=( ENVIRON["HOME"] "/sedbotirc/irc.sylnt.us/#soylent/in");
+  line_re="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} <([^>]*)> (.*)$";
+  blag_re="world wide web|internet|interweb|intersphere|intertubes|interblag|blogosphere|blagonet|blagosphere|blagoblag|webnet|webweb";
+  blag_n=split(blag_re,blag_word,/\|/);
+  slash_n=split("\1ACTION offers # a /\1|\1ACTION tosses a / to #\1|#, did you know there's three slashes in a proper s/// command?|\1ACTION hurls a / at #!\1|#, you bloody moron, get the syntax straight or get off this channel!!\n\1ACTION peppers # with /s\1",slash_msg,"|");
+  srand();
 }
 $0 ~ line_re {
   user=gensub(line_re,"\\1",1);
