@@ -7,7 +7,7 @@ Features
 --------
 It's written in awk (needs gawk extensions), and implements the following suffixes:
 *   i/I for case-insensitive match
-*   [0-9]+ to replace the _n_th match (note that 0 will be accepted, but treated as 1)
+*   decimal integer _n_ (must be >0) to replace only the _n_th match
 *   g/G to replace every match
 
 It also implements <http://m.xkcd.com/181/> replacements.

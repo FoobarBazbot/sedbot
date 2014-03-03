@@ -22,7 +22,7 @@ line ~ /^s/ {
   sep=substr(line,2,1);
   if(sep ~ /[\.\^\$\[\]\|\+\*\(\)\{\}]/) sep="\\"sep;
   desep="\\\\("sep")";
-  s_re = "^s" sep "(([^" sep "]|\\\\" sep ")+)" sep "(([^" sep "]|\\\\" sep ")*)" sep "(([0-9]+|g)|([iI]))*$";
+  s_re = "^s" sep "(([^" sep "]|\\\\" sep ")+)" sep "(([^" sep "]|\\\\" sep ")*)" sep "(([0-9]*[1-9][0-9]*|g)|([iI]))*$";
   if(line ~ s_re) {
     update_line=0;
     search=gensub(desep,"\\1","g",gensub(s_re,"\\1", 1, line));
