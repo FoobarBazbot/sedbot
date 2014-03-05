@@ -15,7 +15,7 @@ $0 ~ line_re {
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
   update_line=1;
 }
-line ~ /^s\/(([^\/\\]|\\.)+)\/(([^\/\\]|\\.)*)$/ {
+line ~ /^s\/(([^\/\\]|\\.)+)\/(([^\/\\]|\\.)*)[[:space:]]*$/ {
   update_line=0;
   lineout("",gensub("#",user,"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
 }
@@ -23,7 +23,7 @@ line ~ /^s/ {
   sep=substr(line,2,1);
   if(sep ~ /[\.\^\$\[\]\|\+\*\(\)\{\}]/) sep="\\"sep;
   desep="\\\\("sep")";
-  s_re = "^s" sep "(([^" sep "\\\\]|\\\\.)+)" sep "(([^" sep "\\\\]|\\\\.)*)" sep "(([0-9]*[1-9][0-9]*|g)|([iI]))*$";
+  s_re = "^s" sep "(([^" sep "\\\\]|\\\\.)+)" sep "(([^" sep "\\\\]|\\\\.)*)" sep "(([0-9]*[1-9][0-9]*|g)|([iI]))*[[:space:]]*$";
   if(line ~ s_re) {
     update_line=0;
     search=gensub(desep,"\\1","g",gensub(s_re,"\\1", 1, line));
