@@ -4,7 +4,7 @@ function lineout(old,new,nouser) {
   if(taunt[user]>0) taunt[user]--;
 }
 function tauntuser(u) {
-  if(taunt[u]>0) for(i=1;i<10;i++) u=gensub("("vowel_re")+",vowel_letter[int(rand()*vowel_n+1)],i,u);
+  if(taunt[u]>0) for(i=1;i<10;i++) u=gensub("("vowel_re")+(.)",vowel_letter[int(rand()*vowel_n+1)]"\\2",i,u);
   return u;
 }
 BEGIN {
@@ -12,7 +12,7 @@ BEGIN {
   line_re="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} <([^>]*)> (.*)$";
   blag_re="world wide web|internet|interweb|intersphere|intertubes|interblag|blogosphere|blagonet|blagosphere|blagoblag|webnet|webweb";
   blag_n=split(blag_re,blag_word,/\|/);
-  vowel_re="a|e|i|o|u";
+  vowel_re="a|e|i|o|u|y";
   vowel_n=split(vowel_re,vowel_letter,/\|/); 
   slash_n=split("\1ACTION offers # a /\1|\1ACTION tosses a / to #\1|#, did you know there's THREE slashes in a proper s/// command?|\1ACTION hurls a / at #!\1|#, you bloody moron, get the syntax straight or get off this channel!!\n\1ACTION peppers # with /s\1",slash_msg,"|");
   srand();
