@@ -1,7 +1,11 @@
 #!/usr/bin/gawk -f
 function lineout(old,new,nouser) {
-  if(old!=new) print (nouser?"":"<" outuser "> ") new >outfile; close(outfile);
-  if(taunt[user]) taunt[user]--;
+  if(old!=new) print (nouser?"":"<" tauntuser(user) "> ") new >outfile; close(outfile);
+  if(taunt[user]>0) taunt[user]--;
+}
+function tauntuser(u) {
+  if(taunt[u]>0) for(i=1;i<10;i++) u=gensub("("vowel_re")+",vowel_letter[int(rand()*vowel_n+1)],i,u);
+  return u;
 }
 BEGIN {
   outfile=( ENVIRON["HOME"] "/sedbotirc/irc.sylnt.us/#soylent/in");
@@ -15,14 +19,13 @@ BEGIN {
 }
 $0 ~ line_re {
   user=gensub(line_re,"\\1",1);
-  outuser=taunt[user]?gensub("("vowel_re")+",vowel_letter[int(rand()*vowel_n+1)],1,user):user;
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
   update_line=1;
 }
 line ~ /^s\/(([^\/\\]|\\.)+)\/(([^\/\\]|\\.)*)[[:space:]]*$/ {
   update_line=0;
-  taunt[user]+=2;
-  lineout("",gensub("#",outuser,"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
+  taunt[user]+=1.5;
+  lineout("",gensub("#",tauntuser(user),"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
 }
 line ~ /^s/ {
   sep=substr(line,2,1);
@@ -42,5 +45,5 @@ line ~ /^s/ {
     lineout(last_line[user],gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
   }
 }
-line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 46-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
+line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 49-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
 update_line {last_line[user]=line;}
