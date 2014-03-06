@@ -1,23 +1,28 @@
 #!/usr/bin/gawk -f
 function lineout(old,new,nouser) {
-  if(old!=new) print (nouser?"":"<" user "> ") new >outfile; close(outfile);
+  if(old!=new) print (nouser?"":"<" outuser "> ") new >outfile; close(outfile);
+  if(taunt[user]) taunt[user]--;
 }
 BEGIN {
   outfile=( ENVIRON["HOME"] "/sedbotirc/irc.sylnt.us/#soylent/in");
   line_re="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} <([^>]*)> (.*)$";
   blag_re="world wide web|internet|interweb|intersphere|intertubes|interblag|blogosphere|blagonet|blagosphere|blagoblag|webnet|webweb";
   blag_n=split(blag_re,blag_word,/\|/);
+  vowel_re="a|e|i|o|u";
+  vowel_n=split(vowel_re,vowel_letter,/\|/); 
   slash_n=split("\1ACTION offers # a /\1|\1ACTION tosses a / to #\1|#, did you know there's THREE slashes in a proper s/// command?|\1ACTION hurls a / at #!\1|#, you bloody moron, get the syntax straight or get off this channel!!\n\1ACTION peppers # with /s\1",slash_msg,"|");
   srand();
 }
 $0 ~ line_re {
   user=gensub(line_re,"\\1",1);
+  outuser=taunt[user]?gensub("("vowel_re")+",vowel_letter[int(rand()*vowel_n+1)],1,user):user;
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
   update_line=1;
 }
 line ~ /^s\/(([^\/\\]|\\.)+)\/(([^\/\\]|\\.)*)[[:space:]]*$/ {
   update_line=0;
-  lineout("",gensub("#",user,"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
+  taunt[user]+=2;
+  lineout("",gensub("#",outuser,"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
 }
 line ~ /^s/ {
   sep=substr(line,2,1);
@@ -37,5 +42,5 @@ line ~ /^s/ {
     lineout(last_line[user],gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
   }
 }
-line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 41-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
+line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 46-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
 update_line {last_line[user]=line;}
