@@ -47,7 +47,7 @@ line ~ /^s/ {
     if(!count) count=1;
     if(casein) IGNORECASE=1; else IGNORECASE=0;
     newline=gensub(search,repl,count,last_line[repluser]);
-    lineout(last_line[repluser],(repluser!=user?"<"repluser"> ":"")gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
+    lineout((repluser!=user?"<"repluser"> ":"")last_line[repluser],(repluser!=user?"<"repluser"> ":"")gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
   }
 }
 line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 53-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
