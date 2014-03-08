@@ -18,7 +18,7 @@ BEGIN {
   srand();
 }
 $0 ~ line_re {
-  user=gensub(line_re,"\\1",1);
+  user=repluser=gensub(line_re,"\\1",1);
   line=gensub(/\001ACTION (.*)\001/,"\\1",1,gensub(line_re,"\\2",1));
   update_line=1;
 }
@@ -26,6 +26,11 @@ line ~ /^s\/(([^\/\\]|\\.)+)\/(([^\/\\]|\\.)*)[[:space:]]*$/ {
   update_line=0;
   taunt[user]+=1.5;
   lineout("",gensub("#",tauntuser(user),"g",slash_msg[int(rand()*rand()*slash_n+1)]),1);
+}
+line ~ /^([\x41-\x7D][-0-9\x41-\x7D]*)[:,] s(.*)/ {
+  repluser=gensub(/^([\x41-\x7D][-0-9\x41-\x7D]*)[:,] s(.*)/,"\\1",1,line);
+  line=gensub(/^([\x41-\x7D][-0-9\x41-\x7D]*)[:,] (s.*)/,"\\2",1,line);
+  print repluser ": " line "\n" >"/dev/stderr";
 }
 line ~ /^s/ {
   sep=substr(line,2,1);
@@ -38,12 +43,12 @@ line ~ /^s/ {
     repl  =gensub(desep,"\\1","g",gensub(s_re,"\\3", 1, line));
     count =gensub(desep,"\\1","g",gensub(s_re,"\\6", 1, line));
     casein=gensub(desep,"\\1","g",gensub(s_re,"\\7", 1, line));
-    print user ": " line "\n" s_re "\n" search "\n" repl "\n" count "\n" casein >"/dev/stderr";
+    print repluser ": " line "\n" s_re "\n" search "\n" repl "\n" count "\n" casein >"/dev/stderr";
     if(!count) count=1;
     if(casein) IGNORECASE=1; else IGNORECASE=0;
-    newline=gensub(search,repl,count,last_line[user]);
-    lineout(last_line[user],gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
+    newline=gensub(search,repl,count,last_line[repluser]);
+    lineout(last_line[repluser],(repluser!=user?"<"repluser"> ":"")gensub(blag_re,blag_word[int(rand()*blag_n+1)],"g",newline));
   }
 }
-line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 49-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
+line ~ /^[sS][eE][dD][bB][oO][tT]/ {lineout("","\001ACTION is a 53-line awk script, https://github.com/FoobarBazbot/sedbot\001",1);}
 update_line {last_line[user]=line;}
